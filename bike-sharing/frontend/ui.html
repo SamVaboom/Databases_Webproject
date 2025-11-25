@@ -1,1 +1,150 @@
 <!-- Post-login dashboard scaffold; connect to style.css for styling, main.js for view toggling and API calls to bikes, users, and maintenance. -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bike Sharing</title>
+
+    <link rel="stylesheet" href="stylesbike.css">
+
+    <!-- Mapbox -->
+    <script src="https://api.tiles.mapbox.com/mapbox-gl-js/v0.43.0/mapbox-gl.js"></script>
+    <link href="https://api.tiles.mapbox.com/mapbox-gl-js/v0.43.0/mapbox-gl.css" rel="stylesheet" />
+    <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v2.1.1/mapbox-gl-geocoder.min.js"></script>
+    <link href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v2.1.1/mapbox-gl-geocoder.css" rel="stylesheet" />
+
+</head>
+<body>
+
+<!-- ================================
+     MAIN GRID
+================================ -->
+<div class="main-grid">
+
+    <div class="header">
+        <div class="logo">BOB RIDE</div>
+        <div class="header-buttons">
+            <button>Home</button>
+            <button>Stations</button>
+            <button>Account</button>
+            <button>Settings</button>
+            <button>Logout</button>
+        </div>
+    </div>
+
+    <div class="map">
+        <!-- Der Map-Container -->
+        <div id="mapbox"></div>
+    </div>
+
+    <div class="content">
+        CONTENT
+    </div>
+
+</div>
+
+
+<!-- ================================
+     JAVASCRIPT
+================================ -->
+<script>
+
+    /* ================================
+       MAPBOX INITIALISIERUNG
+    ================================= */
+    mapboxgl.accessToken = 'pk.eyJ1IjoibGF3aXgxMCIsImEiOiJjamJlOGE1bmcyZ2V5MzNtcmlyaWRzcDZlIn0.ZRQ73zzVxwcADIPvsqB6mg';
+
+    var defaultCoords = [7.2472, 47.1372];
+
+    var map = new mapboxgl.Map({
+        container: 'mapbox',
+        style: 'mapbox://styles/mapbox/streets-v9',
+        center: defaultCoords,
+        zoom: 13
+    });
+
+    var geocoder = new MapboxGeocoder({
+        accessToken: mapboxgl.accessToken,
+        mapboxgl: mapboxgl,
+        marker: false
+    });
+
+    map.addControl(geocoder);
+
+
+    /* ================================
+       MOCK-STATIONSDATEN
+    ================================= */
+    const stations = [
+        { id: 1, street: "Bahnhofstrasse 1", capacity: 12, bikes: 5, lat: 47.378, lng: 7.246 },
+        { id: 2, street: "Hauptplatz 2", capacity: 8, bikes: 2, lat: 47.136, lng: 7.249 },
+        { id: 3, street: "Pappelweg 10", capacity: 6, bikes: 4, lat: 47.140, lng: 7.241 }
+    ];
+
+
+    /* ================================
+       STATIONS-MARKER RENDERN
+       (Kompatibel mit Mapbox v0.43)
+    ================================= */
+    function renderStations() {
+        stations.forEach(st => {
+
+            new mapboxgl.Marker()    // Standardmarker (funktioniert garantiert)
+                .setLngLat([st.lng, st.lat])
+                .setPopup(
+                    new mapboxgl.Popup({ offset: 12 }).setHTML(`
+                        <div style="font-family:Arial; min-width:180px">
+                            <h3 style="margin:0 0 6px 0; font-size:16px;">${st.street}</h3>
+                            <div style="font-size:14px; color:#444;">
+                                <strong>ID:</strong> ${st.id}<br>
+                                <strong>Kapazität:</strong> ${st.capacity}<br>
+                                <strong>Verfügbare Bikes:</strong> ${st.bikes}
+                            </div>
+                        </div>
+                    `)
+                )
+                .addTo(map);
+        });
+    }
+
+    map.on("load", function () {
+        renderStations();
+    });
+
+
+    /* ================================
+       GEOLOCATION
+    ================================= */
+    function successCallback(position) {
+        var latitude = position.coords.latitude;
+        var longitude = position.coords.longitude;
+
+        map.setCenter([longitude, latitude]);
+        map.setZoom(14);
+
+        new mapboxgl.Marker({ color: 'red' })
+            .setLngLat([longitude, latitude])
+            .setPopup(new mapboxgl.Popup().setText("Du bist hier"))
+            .addTo(map);
+    }
+
+    function errorCallback(error) {
+        console.warn("Standort konnte nicht ermittelt werden:", error.message);
+    }
+
+    var options = {
+        enableHighAccuracy: true,
+        timeout: 5000,
+        maximumAge: 0
+    };
+
+    if ("geolocation" in navigator) {
+        navigator.geolocation.getCurrentPosition(successCallback, errorCallback, options);
+    }
+
+</script>
+
+
+</body>
+</html>

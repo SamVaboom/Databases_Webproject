@@ -1,0 +1,143 @@
+/* ===============================
+   MAIN GRID
+================================= */
+.main-grid {
+    display: grid;
+    grid-template-columns: 65% 35%;
+    grid-template-rows: auto 1fr; /* Header + gleichmäßig wachsender Inhalt */
+    gap: clamp(0.5em, 2vw, 1em);
+    width: 98%;
+    margin: 0 auto;
+    padding: clamp(8px, 2vw, 16px);
+
+    /* ⭐ Das löst ALLE Probleme */
+    height: auto;
+    min-height: 100vh;
+    box-sizing: border-box;
+}
+
+/* ===============================
+   HEADER
+================================= */
+.header {
+    grid-column: 1 / -1;
+    border: 2px solid black;
+    border-radius: 10px;
+    padding: clamp(12px, 1.5vw, 20px);
+    background-color: white;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+
+    font-size: clamp(20px, 2.5vw, 32px);
+    font-weight: bold;
+    font-family: Arial, sans-serif;
+}
+
+.logo {
+    color: green;
+}
+
+/* ===============================
+   HEADER BUTTONS
+================================= */
+.header-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: clamp(0.5em, 1.5vw, 1em);
+}
+
+.header-buttons button {
+    padding: clamp(8px, 1vw, 12px) clamp(12px, 2vw, 20px);
+    border: 2px solid black;
+    border-radius: 8px;
+    background-color: white;
+    cursor: pointer;
+    font-size: clamp(14px, 2vw, 16px);
+    transition: 0.2s;
+}
+
+.header-buttons button:hover {
+    background-color: black;
+    color: white;
+    transform: translateY(-2px);
+}
+
+/* ===============================
+   MAP & CONTENT
+================================= */
+.map,
+.content {
+    border: 2px solid black;
+    border-radius: 10px;
+    padding: 0;   /* ⭐ padding entfernt – Map wird endlich perfekt fullscreen */
+    background-color: white;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: clamp(18px, 3vw, 28px);
+    font-weight: bold;
+    font-family: Arial, sans-serif;
+}
+
+.map {
+    min-height: 450px; /* Sieht besser aus */
+    height: 100%;
+}
+
+.map #mapbox {
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+    overflow: hidden;
+}
+.station-marker {
+    transition: transform .15s ease;
+}
+
+.station-marker:hover {
+    transform: scale(1.25);
+}
+
+
+/* ===============================
+   MOBILE OPTIMIZATION
+================================= */
+@media (max-width: 900px) {
+    .main-grid {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto auto;
+        height: auto;
+        min-height: auto;
+    }
+
+    .map {
+        min-height: 350px;
+    }
+
+    .header {
+        justify-content: center;
+        text-align: center;
+        gap: 0.8em;
+    }
+
+    .header-buttons {
+        justify-content: center;
+    }
+}
+
+@media (max-width: 600px) {
+    .header-buttons button {
+        font-size: 14px;
+        padding: 8px 14px;
+    }
+
+    .map {
+        min-height: 300px;
+    }
+}
