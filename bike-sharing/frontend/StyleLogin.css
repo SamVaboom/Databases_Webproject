@@ -1,0 +1,66 @@
+
+/*Login Window grey*/
+.Lwindow {
+    display: block;
+    margin: auto;
+    width: 15em;
+    background-color: rgb(218, 217, 217);
+    border-radius: 8px;
+    padding: 0.5em;
+    gap: 10em 10em;
+    box-sizing: border-box;  
+}
+
+/*Sign in Window grey*/
+.Swindow {
+    display: none;
+    margin: auto;
+    width: 25em;
+    background-color: rgb(218, 217, 217);
+    border-radius: 8px;
+    padding: 0.5em;
+    gap: 10em 10em;
+    box-sizing: border-box;  
+}
+
+/*Inputfield Login and Signin*/
+.Inputfield {
+    background-color: rgb(255, 255, 255);
+    width: 95%;
+    height: 2em;
+    border-radius: 8px;
+    gap: 4px 2px;
+    margin: 4px 0;
+}
+
+/*Text worng PW*/
+.Error{
+    display: none;
+    color:red;
+}
+
+/*Login Button*/
+.SubButton {
+    width: 100%;
+    background-color: rgb(5, 58, 172);
+    border-radius: 8px;
+    gap: 70px 8px;
+    padding: 12px;
+    margin: 0px 0;
+    box-sizing: border-box;
+    border: none;
+    color: white;
+}
+
+/*Sign In Button*/
+.SignButton {
+    width: 100%;
+    background-color: rgb(95, 136, 224);
+    border-radius: 8px;
+    gap: 70px 8px;
+    padding: 12px;
+    margin: 4px 0;
+    box-sizing: border-box;
+    border: none;
+    color: white;
+}

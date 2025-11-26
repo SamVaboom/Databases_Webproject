@@ -1,1 +1,210 @@
 <!-- Login page placeholder; include style.css for layout and main.js for authentication requests and page transitions. -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+</head>
+
+<body>
+    <link rel="stylesheet" href="StyleLogin.css">
+
+
+    <!--Login Fenster-->
+    <div class="Lwindow" id="LoginWindow">
+        <label>Username:</label>
+        <br>
+        <input class="Inputfield" type="text" id="username">
+        <br>
+        <br>
+        <label>Password:</label>
+        <br>
+        <input class="Inputfield" type="text" id="userpassword">
+        <br>
+        <input class="SubButton" id="LoginButton" type="submit" value="Login">
+        <br>
+        <input class="SignButton" id="SuWindowButton" type="button" value="Signup">
+    
+    <center>
+        <p class="Error" id="WrongPW">Username or Password is wrong!</p>
+    </center>
+</div>
+
+
+    <!--SingUp Fenster-->
+    <div class="Swindow" id="SignupWindow">
+        <label>Username:*</label>
+        <br>
+        <input class="Inputfield" type="text" id="SUusername">
+        <br>
+        <br>
+        <label>Firstname:*</label>
+        <br>
+        <input class="Inputfield" type="text" id="SUfname">
+        <br>
+        <br>
+        <label>Lastname:*</label>
+        <br>
+        <input class="Inputfield" type="text" id="SUlname">
+        <br>
+        <br>
+        <label>Email:*</label>
+        <br>
+        <input class="Inputfield" type="text" id="SUemail">
+        <br>
+        <br>
+        <label>Phonenumber:</label>
+        <br>
+        <input class="Inputfield" type="text" id="SUnumber">
+        <br>
+        <br>
+        <label>Adress:*</label>
+        <br>
+        <input class="Inputfield" type="text" id="SUadress">
+        <br>
+        <br>
+        <label>City:*</label>
+        <br>
+        <input class="Inputfield" type="text" id="SUcity">
+        <br>
+        <br>
+        <label>Zipcode:*</label>
+        <br>
+        <input class="Inputfield" type="text" id="SUzipcode">
+        <br>
+        <br>
+        <label>Password:*</label>
+        <br>
+        <input class="Inputfield" type="text" id="SUpassword">
+        <br>
+        <br>
+        <label>Confirm Password:*</label>
+        <br>
+        <input class="Inputfield" type="text" id="SUconfirmpw">
+        <br>
+        <br>
+        <input class="SubButton" id="SubmitButton" type="submit" value="Submit">
+        <br>
+        <input class="SignButton" id="SignCancel" type="button" value="Cancel">
+        <center>
+            <p class="Error" id="NotAllData">Not all required fields are filled!</p>
+        </center>
+    </div>
+
+
+
+
+    <script>
+        //GetElements Error Messages
+        const wrongPW = document.getElementById('WrongPW');
+        const notAllData = document.getElementById('NotAllData');
+
+        //Get Element login window
+        const loginWindow = document.getElementById('LoginWindow');
+        
+        //Buttons login window
+        const signButton = document.getElementById('SuWindowButton');
+        const loginButton = document.getElementById('LoginButton');
+        
+        // Login Inputs
+        const username = document.getElementById('username');
+        const userpassword = document.getElementById('userpassword');
+        
+        //Get Element signup window
+        const signupWindow = document.getElementById('SignupWindow')
+
+        //Buttons sign up window
+        const cancelButton = document.getElementById('SignCancel');
+        const submitButton = document.getElementById('SubmitButton');
+        
+        // SignUp Inputs
+        const SUusername = document.getElementById('SUusername');
+        const SUfname = document.getElementById('SUfname');
+        const SUlname = document.getElementById('SUlname');
+        const SUemail = document.getElementById('SUemail');
+        const SUnumber = document.getElementById('SUnumber');
+        const SUadress = document.getElementById('SUadress');
+        const SUcity = document.getElementById('SUcity');
+        const SUzipcode = document.getElementById('SUzipcode');
+        const SUpassword = document.getElementById('SUpassword');
+        const SUconfirmpw = document.getElementById('SUconfirmpw');
+        
+
+
+        //wrongPW.style.display = "block";  //Aktivieren für wenn PW oder Name falsch     
+        //notAllData.style.display = "block";  //Aktivieren für wenn PW oder Name falsch     
+
+        //Signup Button in login field
+        //Hide login window when signup button
+        signButton.addEventListener('click', () => displayHide(loginWindow));
+        //Show sign up window when signup button
+        signButton.addEventListener('click', () => displayShow(signupWindow));
+        //
+
+        //Login Button in login field
+        loginButton.addEventListener('click', () => checkLogin());
+        //
+
+        //Cancel Button sign up field
+        //Show login window when cancel button
+        cancelButton.addEventListener('click', () => displayShow(loginWindow));
+        //Hide sign up window when cancel button
+        cancelButton.addEventListener('click', () => displayHide(signupWindow));
+        //
+
+        //Submit Button in signupfield
+        submitButton.addEventListener('click', () => allSignUpFieldsFilled());
+        //
+        
+
+
+        //Function to Hide CSS
+        function displayHide(hideMe) {
+            hideMe.style.display = "none";
+        }
+
+        //Function to Show CSS
+        function displayShow(showMe) {
+            showMe.style.display = "block";
+        }
+
+        //Function to see if all mandatory fields are flled
+        function allSignUpFieldsFilled() {
+        if (SUusername.value.trim() == '' ||
+            SUfname.value.trim() == '' ||
+           SUlname.value.trim() == '' ||
+           SUemail.value.trim() == '' ||
+           SUadress.value.trim() == '' ||
+           SUcity.value.trim() == '' ||
+           SUzipcode.value.trim() == ''|| 
+           SUpassword.value.trim() == '' ||
+           SUconfirmpw.value.trim() == '') 
+           {displayShow(notAllData);
+            return false;
+           }
+           else displayHide(notAllData);
+           return true;
+           ;
+}
+
+//Function check email and pw
+function checkLogin(){
+/*if(){
+    displayHide(wrongPW)
+    return true;}
+else 
+displayShow(wrongPW)
+return true;
+displayShow(wrongPW);
+return false;*/
+}
+
+
+//Funktion checklogin ahpasse und dört überprüefe ob guet im if denn mitem usgang vor funktion zur mainpage wechsle
+//Wenn allsignupfieldsfille funktion = true zweite funktion schreiben wo
+    </script>
+</body>
+
+</html>
