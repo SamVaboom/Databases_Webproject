@@ -21,11 +21,11 @@
         <br>
         <label>Password:</label>
         <br>
-        <input class="Inputfield" type="text" id="userpassword">
+        <input class="Inputfield" type="text" id="password">
         <br>
-        <input class="SubButton" id="LoginButton" type="submit" value="Login">
+        <input class="SubButton" id="LoginButton" type="submit" value="Login" onclick="login()">
         <br>
-        <input class="SignButton" id="SuWindowButton" type="button" value="Signup">
+        <input class="SignButton" id="SuWindowButton" type="button" value="Signup" onclick="signup()">
     
     <center>
         <p class="Error" id="WrongPW">Username or Password is wrong!</p>
@@ -110,7 +110,7 @@
         
         // Login Inputs
         const username = document.getElementById('username');
-        const userpassword = document.getElementById('userpassword');
+        const userpassword = document.getElementById('password');
         
         //Get Element signup window
         const signupWindow = document.getElementById('SignupWindow')
@@ -194,7 +194,7 @@ function checkLogin(){
 /*if(){
     displayHide(wrongPW)
     return true;}
-else 
+else
 displayShow(wrongPW)
 return true;
 displayShow(wrongPW);
@@ -204,6 +204,43 @@ return false;*/
 
 //Funktion checklogin ahpasse und dört überprüefe ob guet im if denn mitem usgang vor funktion zur mainpage wechsle
 //Wenn allsignupfieldsfille funktion = true zweite funktion schreiben wo
+    </script>
+    <script>
+async function login() {
+    const username = document.getElementById("username").value;
+    const password = document.getElementById("password").value;
+
+    const res = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({ username, password })
+    });
+
+    const data = await res.json();
+    if (data.success) {
+        window.location.href = "ui.html";
+    } else {
+        alert("Invalid login");
+    }
+}
+
+async function signup() {
+    const username = document.getElementById("username").value;
+    const password = document.getElementById("password").value;
+
+    const res = await fetch("/api/auth/signup", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({ username, password })
+    });
+
+    const data = await res.json();
+    if (data.success) {
+        alert("Account created. You can now log in.");
+    } else {
+        alert("Signup failed: " + data.message);
+    }
+}
     </script>
 </body>
 
