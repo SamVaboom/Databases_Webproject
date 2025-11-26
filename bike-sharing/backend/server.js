@@ -1,13 +1,17 @@
 const express = require("express");
-const cors = require("cors");
-
 const app = express();
-app.use(cors());
+const path = require("path");
+require("dotenv").config();
+
 app.use(express.json());
 
+// >>> SERVE THE FRONTEND (IMPORTANT) <<<
+app.use(express.static(path.join(__dirname, "../frontend")));
+
+// API routes
 app.use("/api/auth", require("./routes/auth.routes"));
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+// Start server
+app.listen(3000, () => {
+    console.log("Server running on port 3000");
 });
