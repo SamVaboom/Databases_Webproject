@@ -145,7 +145,75 @@
 
 </script>
 
-<script>// Placeholder to confirm user is logged in later.</script>
+<script type="module">
+    import { 
+        getAllBikes,
+        getAllStations,
+        getAllPersonas,
+        getPersonaById,
+        getAllSubscriptions,
+        getAllMaintenance,
+        getAllRides
+    } from "./main.js";
+
+    const contentBox = document.querySelector(".content");
+
+    // ----- Helper: JSON anzeigen -----
+    function show(data) {
+        contentBox.innerHTML = `<pre>${JSON.stringify(data, null, 2)}</pre>`;
+    }
+
+    // ----- BUTTON-FUNKTIONEN -----
+
+    async function showHome() {
+        show({ message: "Welcome to BobRide! Select a category above." });
+    }
+
+    async function showStations() {
+        const data = await getAllStations();
+        show(data);
+    }
+
+    async function showAccount() {
+        // später aus sessionStorage – jetzt hardcoded bis Login fertig ist
+        const personaId = 1;
+        const data = await getPersonaById(personaId);
+        show(data);
+    }
+
+    async function showSettings() {
+        const subs = await getAllSubscriptions();
+        show(subs);
+    }
+
+    async function showMaintenance() {
+        const data = await getAllMaintenance();
+        show(data);
+    }
+
+    async function showRides() {
+        const data = await getAllRides();
+        show(data);
+    }
+
+    // ----- LOGOUT -----
+    async function logout() {
+        window.location.href = "login.html";
+    }
+
+    // ----- BUTTON-EVENTS -----
+    const buttons = document.querySelectorAll(".header-buttons button");
+
+    buttons[0].addEventListener("click", showHome);        // Home
+    buttons[1].addEventListener("click", showStations);    // Stations
+    buttons[2].addEventListener("click", showAccount);     // Account
+    buttons[3].addEventListener("click", showSettings);    // Settings
+    buttons[4].addEventListener("click", logout);          // Logout
+
+    // Startscreen laden
+    showHome();
+</script>
+
 
 
 </body>
