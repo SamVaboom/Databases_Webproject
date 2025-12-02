@@ -527,16 +527,13 @@ if (typeof document !== 'undefined') {
     let currentPersona = null;
     let bikesCache = [];
 
-    function setPersonaIdDefault() {
-        if (!sessionStorage.getItem('personaId')) {
-            sessionStorage.setItem('personaId', '1');
-        }
-    }
+   
+
 
     function getPersonaId() {
-        setPersonaIdDefault();
-        return Number(sessionStorage.getItem('personaId'));
-    }
+    return Number(sessionStorage.getItem('personaId'));
+}
+
 
     function showMessage(html) {
         contentBox.innerHTML = html;
@@ -559,7 +556,7 @@ if (typeof document !== 'undefined') {
 
     async function loadPersona() {
         try {
-            const persona = await getPersonaById(getPersonaId());
+            let persona = await getPersonaById(getPersonaId());
             if (persona && !persona.error) {
                 currentPersona = persona;
             }

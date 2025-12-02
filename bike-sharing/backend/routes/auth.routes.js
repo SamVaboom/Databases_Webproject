@@ -12,11 +12,15 @@ router.post("/login", async (req, res) => {
     );
 
     if (rows.length > 0) {
-        return res.json({ success: true });
+        return res.json({
+            success: true,
+            persona_id: rows[0].persona_id   // 🔥 WICHTIG!
+        });
     } else {
         return res.json({ success: false });
     }
 });
+
 
 // SIGNUP (minimal insert)
 router.post("/signup", async (req, res) => {
