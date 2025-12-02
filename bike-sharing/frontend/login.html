@@ -25,7 +25,7 @@
         <br>
         <input class="SubButton" id="LoginButton" type="submit" value="Login" onclick="login()">
         <br>
-        <input class="SignButton" id="SuWindowButton" type="button" value="Signup" onclick="signup()">
+        <input class="SignButton" id="SuWindowButton" type="button" value="Signup" >
     
     <center>
         <p class="Error" id="WrongPW">Username or Password is wrong!</p>
@@ -120,16 +120,16 @@
         const submitButton = document.getElementById('SubmitButton');
         
         // SignUp Inputs
-        const SUusername = document.getElementById('SUusername');
-        const SUfname = document.getElementById('SUfname');
-        const SUlname = document.getElementById('SUlname');
-        const SUemail = document.getElementById('SUemail');
-        const SUnumber = document.getElementById('SUnumber');
-        const SUadress = document.getElementById('SUadress');
-        const SUcity = document.getElementById('SUcity');
-        const SUzipcode = document.getElementById('SUzipcode');
-        const SUpassword = document.getElementById('SUpassword');
-        const SUconfirmpw = document.getElementById('SUconfirmpw');
+        let SUusername = document.getElementById('SUusername');
+        let SUfname = document.getElementById('SUfname');
+        let SUlname = document.getElementById('SUlname');
+        let SUemail = document.getElementById('SUemail');
+        let SUnumber = document.getElementById('SUnumber');
+        let SUadress = document.getElementById('SUadress');
+        let SUcity = document.getElementById('SUcity');
+        let SUzipcode = document.getElementById('SUzipcode');
+        let SUpassword = document.getElementById('SUpassword');
+        let SUconfirmpw = document.getElementById('SUconfirmpw');
         
 
 
@@ -185,21 +185,22 @@
             return false;
            }
            else displayHide(notAllData);
+           signup();
            return true;
            ;
 }
 
 //Function check email and pw
-function checkLogin(){
-/*if(){
+/*function checkLogin(){
+if(){
     displayHide(wrongPW)
     return true;}
 else
 displayShow(wrongPW)
 return true;
 displayShow(wrongPW);
-return false;*/
-}
+return false;
+}*/
 
 
 //Funktion checklogin ahpasse und dört überprüefe ob guet im if denn mitem usgang vor funktion zur mainpage wechsle
@@ -225,22 +226,60 @@ async function login() {
 }
 
 async function signup() {
-    const username = document.getElementById("username").value;
-    const password = document.getElementById("password").value;
 
-    const res = await fetch("/api/auth/signup", {
-        method: "POST",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({ username, password })
-    });
+    // Collect form values
+    let username = SUusername.value.trim();
+    let firstname = SUfname.value.trim();
+    let lastname = SUlname.value.trim();
+    let email = SUemail.value.trim();
+    let phonenum = SUnumber.value.trim();
+    let adress = SUadress.value.trim();
+    let city = SUcity.value.trim();
+    let zipcode = SUzipcode.value.trim();
+    let password = SUpassword.value.trim();
+    let confirmPassword = SUconfirmpw.value.trim();
 
-    const data = await res.json();
-    if (data.success) {
-        alert("Account created. You can now log in.");
-    } else {
-        alert("Signup failed: " + data.message);
+    // Check password match
+    if (password !== confirmPassword) {
+        alert("Passwords do not match.");
+        return;
+    }
+
+    // Build request body
+    const userData = {
+        username,
+        firstname,
+        lastname,
+        email,
+        phonenum,
+        adress,
+        city,
+        zipcode,
+        password
+    };
+
+    try {
+        const res = await fetch("/api/auth/signup", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify(userData)
+        });
+
+        const data = await res.json();
+
+        if (data.success) {
+            alert("Signup successful! You can now log in.");
+            window.location.href = "login.html";
+        } else {
+            alert("Signup failed: " + data.message);
+        }
+
+    } catch (err) {
+        console.error("Signup error:", err);
+        alert("An error occurred while signing up.");
     }
 }
+
     </script>
 </body>
 

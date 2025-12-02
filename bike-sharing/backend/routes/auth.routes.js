@@ -20,17 +20,37 @@ router.post("/login", async (req, res) => {
 
 // SIGNUP (minimal insert)
 router.post("/signup", async (req, res) => {
-    const { username, password } = req.body;
+    const { 
+        username, firstname, lastname, email,
+        phonenum, adress, city, zipcode, password
+    } = req.body;
 
     try {
         await db.query(
-            "INSERT INTO persona (persona_id, username, firstname, lastname, email, phonenum, password, adress, city, zipcode, subscription_id, payment_method, account_created) VALUES (NULL, ?, '', '', '', NULL, ?, '', '', 0, 2, '', CURDATE())",
-            [username, password]
+            `INSERT INTO persona 
+            (username, firstname, lastname, email, phonenum, adress, city, zipcode, password, 
+             subscription_id, payment_method, account_created)
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 2, 'twint', CURDATE())`,
+            [
+                username,
+                firstname,
+                lastname,
+                email,
+                phonenum,
+                adress,
+                city,
+                zipcode,
+                password
+            ]
         );
+
         return res.json({ success: true });
+
     } catch (err) {
+        console.error(err);
         return res.json({ success: false, message: err.sqlMessage });
     }
 });
+
 
 module.exports = router;
