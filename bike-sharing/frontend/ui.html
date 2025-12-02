@@ -13,7 +13,6 @@
     <link href="https://api.tiles.mapbox.com/mapbox-gl-js/v0.43.0/mapbox-gl.css" rel="stylesheet" />
     <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v2.1.1/mapbox-gl-geocoder.min.js"></script>
     <link href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v2.1.1/mapbox-gl-geocoder.css" rel="stylesheet" />
-
 </head>
 <body>
 
@@ -39,182 +38,15 @@
     </div>
 
     <div class="content">
-        CONTENT
+        <div class="ride-controls">
+            <button id="start-ride">Start Ride</button>
+            <button id="end-ride">End Ride</button>
+        </div>
+        <div id="content-box">CONTENT</div>
     </div>
 
 </div>
 
-
-<!-- ================================
-     JAVASCRIPT
-================================ -->
-<script>
-
-    /* ================================
-       MAPBOX INITIALISIERUNG
-    ================================= */
-    mapboxgl.accessToken = 'pk.eyJ1IjoibGF3aXgxMCIsImEiOiJjamJlOGE1bmcyZ2V5MzNtcmlyaWRzcDZlIn0.ZRQ73zzVxwcADIPvsqB6mg';
-
-    var defaultCoords = [7.2472, 47.1372];
-
-    var map = new mapboxgl.Map({
-        container: 'mapbox',
-        style: 'mapbox://styles/mapbox/streets-v9',
-        center: defaultCoords,
-        zoom: 13
-    });
-
-    var geocoder = new MapboxGeocoder({
-        accessToken: mapboxgl.accessToken,
-        mapboxgl: mapboxgl,
-        marker: false
-    });
-
-    map.addControl(geocoder);
-
-
-    /* ================================
-       MOCK-STATIONSDATEN
-    ================================= */
-    const stations = [
-        { id: 1, street: "Bahnhofstrasse 1", capacity: 12, bikes: 5, lat: 47.378, lng: 7.246 },
-        { id: 2, street: "Hauptplatz 2", capacity: 8, bikes: 2, lat: 47.136, lng: 7.249 },
-        { id: 3, street: "Pappelweg 10", capacity: 6, bikes: 4, lat: 47.140, lng: 7.241 }
-    ];
-
-
-    /* ================================
-       STATIONS-MARKER RENDERN
-       (Kompatibel mit Mapbox v0.43)
-    ================================= */
-    function renderStations() {
-        stations.forEach(st => {
-
-            new mapboxgl.Marker()    // Standardmarker (funktioniert garantiert)
-                .setLngLat([st.lng, st.lat])
-                .setPopup(
-                    new mapboxgl.Popup({ offset: 12 }).setHTML(`
-                        <div style="font-family:Arial; min-width:180px">
-                            <h3 style="margin:0 0 6px 0; font-size:16px;">${st.street}</h3>
-                            <div style="font-size:14px; color:#444;">
-                                <strong>ID:</strong> ${st.id}<br>
-                                <strong>Kapazität:</strong> ${st.capacity}<br>
-                                <strong>Verfügbare Bikes:</strong> ${st.bikes}
-                            </div>
-                        </div>
-                    `)
-                )
-                .addTo(map);
-        });
-    }
-
-    map.on("load", function () {
-        renderStations();
-    });
-
-
-    /* ================================
-       GEOLOCATION
-    ================================= */
-    function successCallback(position) {
-        var latitude = position.coords.latitude;
-        var longitude = position.coords.longitude;
-
-        map.setCenter([longitude, latitude]);
-        map.setZoom(14);
-
-        new mapboxgl.Marker({ color: 'red' })
-            .setLngLat([longitude, latitude])
-            .setPopup(new mapboxgl.Popup().setText("Du bist hier"))
-            .addTo(map);
-    }
-
-    function errorCallback(error) {
-        console.warn("Standort konnte nicht ermittelt werden:", error.message);
-    }
-
-    var options = {
-        enableHighAccuracy: true,
-        timeout: 5000,
-        maximumAge: 0
-    };
-
-    if ("geolocation" in navigator) {
-        navigator.geolocation.getCurrentPosition(successCallback, errorCallback, options);
-    }
-
-</script>
-
-<script type="module">
-    import { 
-        getAllBikes,
-        getAllStations,
-        getAllPersonas,
-        getPersonaById,
-        getAllSubscriptions,
-        getAllMaintenance,
-        getAllRides
-    } from "./main.js";
-
-    const contentBox = document.querySelector(".content");
-
-    // ----- Helper: JSON anzeigen -----
-    function show(data) {
-        contentBox.innerHTML = `<pre>${JSON.stringify(data, null, 2)}</pre>`;
-    }
-
-    // ----- BUTTON-FUNKTIONEN -----
-
-    async function showHome() {
-        show({ message: "Welcome to BobRide! Select a category above." });
-    }
-
-    async function showStations() {
-        const data = await getAllStations();
-        show(data);
-    }
-
-    async function showAccount() {
-        // später aus sessionStorage – jetzt hardcoded bis Login fertig ist
-        const personaId = 1;
-        const data = await getPersonaById(personaId);
-        show(data);
-    }
-
-    async function showSettings() {
-        const subs = await getAllSubscriptions();
-        show(subs);
-    }
-
-    async function showMaintenance() {
-        const data = await getAllMaintenance();
-        show(data);
-    }
-
-    async function showRides() {
-        const data = await getAllRides();
-        show(data);
-    }
-
-    // ----- LOGOUT -----
-    async function logout() {
-        window.location.href = "login.html";
-    }
-
-    // ----- BUTTON-EVENTS -----
-    const buttons = document.querySelectorAll(".header-buttons button");
-
-    buttons[0].addEventListener("click", showHome);        // Home
-    buttons[1].addEventListener("click", showStations);    // Stations
-    buttons[2].addEventListener("click", showAccount);     // Account
-    buttons[3].addEventListener("click", showSettings);    // Settings
-    buttons[4].addEventListener("click", logout);          // Logout
-
-    // Startscreen laden
-    showHome();
-</script>
-
-
-
+<script type="module" src="./main.js"></script>
 </body>
 </html>
