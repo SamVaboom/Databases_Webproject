@@ -526,13 +526,14 @@ if (typeof document !== 'undefined') {
     let mapInstance = null;
     let currentPersona = null;
     let bikesCache = [];
+    let stationMarkers = {};
 
-   
+
 
 
     function getPersonaId() {
-    return Number(sessionStorage.getItem('personaId'));
-}
+        return Number(sessionStorage.getItem('personaId'));
+    }
 
 
     function showMessage(html) {
@@ -595,54 +596,117 @@ if (typeof document !== 'undefined') {
         });
     }
 
-    async function locateUser() {
-        if ('geolocation' in navigator) {
-            navigator.geolocation.getCurrentPosition((position) => {
-                const { latitude, longitude } = position.coords;
-                mapInstance.setCenter([longitude, latitude]);
-                mapInstance.setZoom(14);
-                new mapboxgl.Marker({ color: 'red' })
-                    .setLngLat([longitude, latitude])
-                    .setPopup(new mapboxgl.Popup().setText('You are here'))
-                    .addTo(mapInstance);
-            }, (error) => {
-                console.warn('Geolocation failed', error.message);
-            }, {
-                enableHighAccuracy: true,
-                timeout: 5000,
-                maximumAge: 0
-            });
+    function showUserLocation(lng, lat) {
+
+        const point = {
+            type: "Feature",
+            geometry: {
+                type: "Point",
+                coordinates: [lng, lat]
+            }
+        };
+
+        // Quelle aktualisieren, wenn sie schon existiert
+        if (mapInstance.getSource("user-location")) {
+            mapInstance.getSource("user-location").setData(point);
+            return;
         }
+
+        // Quelle erstellen
+        mapInstance.addSource("user-location", {
+            type: "geojson",
+            data: point
+        });
+
+        // 🔵 Kreis (User Position)
+        mapInstance.addLayer({
+            id: "user-circle",
+            type: "circle",
+            source: "user-location",
+            paint: {
+                "circle-radius": 14,
+                "circle-color": "#4A90E2",      // Blau
+                "circle-opacity": 0.45,
+                "circle-stroke-width": 3,
+                "circle-stroke-color": "#005BBB" // Dunkler rand
+            }
+        });
+
+        // ➤ Pfeil als Symbol
+       /* mapInstance.addLayer({
+            id: "user-arrow",
+            type: "symbol",
+            source: "user-location",
+            layout: {
+                "text-field": "➤",
+                "text-size": 18,
+                "text-offset": [0, 0.1],
+                "text-rotate": 0,   // <- später kannst du hier Kompassrotation hinzufügen
+            },
+            paint: {
+                "text-color": "#003F7F"
+            }
+        });*/
     }
+
+    async function locateUser() {
+    if ('geolocation' in navigator) {
+        navigator.geolocation.getCurrentPosition((position) => {
+            const { latitude, longitude } = position.coords;
+
+            mapInstance.setCenter([longitude, latitude]);
+            mapInstance.setZoom(14);
+
+            showUserLocation(longitude, latitude);
+
+        }, (error) => {
+            console.warn('Geolocation failed', error.message);
+        }, {
+            enableHighAccuracy: true,
+            timeout: 5000,
+            maximumAge: 0
+        });
+    }
+}
+
 
     async function renderStationsOnMap() {
         try {
             const stations = await getAllStations();
             bikesCache = await getAllBikes();
+
             if (stations.error || bikesCache.error) {
                 showError(stations.error || bikesCache.error);
                 return;
             }
+
             stations.forEach(st => {
                 const bikesCount = bikesCache.filter(b => b.station_id === st.station_id).length;
-                new mapboxgl.Marker()
+
+                // Marker speichern!
+                const marker = new mapboxgl.Marker()
                     .setLngLat([st.longitude, st.latitude])
                     .setPopup(new mapboxgl.Popup({ offset: 12 }).setHTML(`
-                        <div style="font-family:Arial; min-width:180px">
-                            <h3 style="margin:0 0 6px 0; font-size:16px;">${st.station_street}</h3>
-                            <div style="font-size:14px; color:#444;">
-                                <strong>ID:</strong> ${st.station_id}<br>
-                                <strong>Kapazität:</strong> ${st.capacity}<br>
-                                <strong>Verfügbare Bikes:</strong> ${bikesCount}
-                            </div>
+                    <div style="font-family:Arial; min-width:180px">
+                        <h3 style="margin:0 0 6px 0; font-size:16px;">${st.station_street}</h3>
+                        <div style="font-size:14px; color:#444;">
+                            <strong>ID:</strong> ${st.station_id}<br>
+                            <strong>Kapazität:</strong> ${st.capacity}<br>
+                            <strong>Verfügbare Bikes:</strong> ${bikesCount}
                         </div>
-                    `))
+                    </div>
+                `))
                     .addTo(mapInstance);
+
+                // jetzt funktioniert es
+                stationMarkers[st.station_id] = marker;
             });
+
         } catch (error) {
             showError(error.message);
         }
     }
+
 
     async function renderHome() {
         try {
@@ -693,33 +757,87 @@ if (typeof document !== 'undefined') {
                 showError(stations.error);
                 return;
             }
-            let html = '<h3>Stations</h3>';
+            let html = `
+                 <h3>Stations</h3>
+            <style>
+                .station-card {
+                    border: 1px solid #ccc;
+                    padding: 10px;
+                    margin-bottom: 10px;
+                    border-radius: 6px;
+                    background: #f8f8f8;
+                }
+                .station-card h4 {
+                    margin: 0 0 8px 0;
+                }
+            </style>
+        `;
             html += stations.map(st => {
                 const bikesCount = bikesCache.filter(b => b.station_id === st.station_id).length;
-                return `<pre>${JSON.stringify({
-                    station_street: st.station_street,
-                    capacity: st.capacity,
-                    current_bikes: bikesCount
-                }, null, 2)}</pre>`;
+
+                return `
+            <div class="station-card" data-id="${st.station_id}">
+            <h4>${st.station_street}</h4>
+            <div><strong>Capacity:</strong> ${st.capacity}</div>
+            <div><strong>Current Bikes:</strong> ${bikesCount}</div>
+            </div>
+
+            `;
             }).join('');
+
             showMessage(html);
+
+
+            document.querySelectorAll('.station-card').forEach(card => {
+
+                card.addEventListener('mouseenter', () => {
+                    card.style.backgroundColor = "#91919193";   // Farbe beim Hover
+                });
+
+                card.addEventListener('mouseleave', () => {
+                    card.style.backgroundColor = "";          // zurücksetzen
+                });
+
+                card.addEventListener('click', () => {
+                    const id = card.getAttribute('data-id');
+                    const marker = stationMarkers[id];
+
+                    if (marker) {
+                        const lngLat = marker.getLngLat();
+
+                        mapInstance.flyTo({
+                            center: lngLat,
+                            zoom: 15,
+                            speed: 1.2
+                        });
+
+                        marker.togglePopup();
+                    }
+                });
+            });
+
         } catch (error) {
             showError(error.message);
         }
     }
 
     function renderAccountDetails(persona, subscriptionName) {
+
+        function extractDate(isoString) {
+            return isoString.split("T")[0];
+        }
+
         const fields = {
-            firstname: persona.firstname,
-            lastname: persona.lastname,
-            email: persona.email,
-            phone: persona.phonenum,
-            address: persona.adress,
-            city: persona.city,
-            zipcode: persona.zipcode,
-            subscription_name: subscriptionName,
-            payment_method: persona.payment_method,
-            account_created: persona.account_created
+            Firstname: persona.firstname,
+            Lastname: persona.lastname,
+            Email: persona.email,
+            Phone: persona.phonenum,
+            Address: persona.adress,
+            City: persona.city,
+            Zipcode: persona.zipcode,
+            Subscription: subscriptionName,
+            Paymentmethod: persona.payment_method,
+            Created: extractDate(persona.account_created)
         };
         let html = '<h3>Account</h3>';
         html += '<div>' + Object.entries(fields).map(([key, value]) => `<div><strong>${key}:</strong> ${value ?? ''}</div>`).join('') + '</div>';
