@@ -1,0 +1,48 @@
+version: "3.9"
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: bikesharing-mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: bikesharing
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ./bikesharing.sql:/docker-entrypoint-initdb.d/bikesharing.sql:ro
+    command: --default-authentication-plugin=mysql_native_password
+
+  backend:
+    build: .
+    container_name: bikesharing-backend
+    restart: always
+    depends_on:
+      - mysql
+    environment:
+      DB_HOST: mysql
+      DB_USER: root
+      DB_PASSWORD: root
+      DB_NAME: bikesharing
+    ports:
+      - "3000:3000"
+    working_dir: /app/backend
+    command: ["node", "server.js"]
+    volumes:
+      - .:/app
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: bikesharing-pma
+    restart: always
+    ports:
+      - "8080:80"
+    environment:
+      PMA_HOST: mysql
+      PMA_USER: root
+      PMA_PASSWORD: root
+
+volumes:
+  mysql-data:
