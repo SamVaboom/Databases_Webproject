@@ -16,6 +16,10 @@
     box-sizing: border-box;
 }
 
+body {
+    background: #c4eec2;
+}
+
 
 /* ===============================
    HEADER
