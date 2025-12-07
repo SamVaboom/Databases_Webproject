@@ -1,66 +1,119 @@
+:root {
+    --border-radius: 10px;
+    --border-color: #0c0c0c;
+    --shadow-soft: 0 8px 20px rgba(0, 0, 0, 0.08);
+}
 
-/*Login Window grey*/
+body.auth-body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f7f7f7;
+    font-family: Arial, sans-serif;
+    color: #0c0c0c;
+    padding: 24px;
+    box-sizing: border-box;
+}
+
+.form-card {
+    width: min(520px, 100%);
+    max-width: 520px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    background: #ffffff;
+    padding: 24px;
+    box-shadow: var(--shadow-soft);
+}
+
+/* Login Window */
 .Lwindow {
     display: block;
     margin: auto;
-    width: 15em;
-    background-color: rgb(218, 217, 217);
-    border-radius: 8px;
-    padding: 0.5em;
-    gap: 10em 10em;
-    box-sizing: border-box;  
 }
 
-/*Sign in Window grey*/
+/* Sign up Window */
 .Swindow {
     display: none;
     margin: auto;
-    width: 25em;
-    background-color: rgb(218, 217, 217);
-    border-radius: 8px;
-    padding: 0.5em;
-    gap: 10em 10em;
-    box-sizing: border-box;  
 }
 
-/*Inputfield Login and Signin*/
+label {
+    display: block;
+    margin: 8px 0 4px;
+    font-size: 14px;
+    letter-spacing: 0.2px;
+}
+
+/* Input fields */
 .Inputfield {
-    background-color: rgb(255, 255, 255);
-    width: 95%;
-    height: 2em;
-    border-radius: 8px;
-    gap: 4px 2px;
-    margin: 4px 0;
+    width: 100%;
+    height: 2.6em;
+    border-radius: var(--border-radius);
+    border: 1px solid var(--border-color);
+    padding: 0 12px;
+    box-sizing: border-box;
+    font-size: 14px;
+    background: #ffffff;
 }
 
-/*Text worng PW*/
-.Error{
+/* Error text */
+.Error {
     display: none;
-    color:red;
+    color: #b00000;
+    font-size: 14px;
+    margin-top: 8px;
 }
 
-/*Login Button*/
-.SubButton {
+/* Shared button system */
+.btn {
     width: 100%;
-    background-color: rgb(5, 58, 172);
-    border-radius: 8px;
-    gap: 70px 8px;
+    background: #ffffff;
+    color: #0c0c0c;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
     padding: 12px;
-    margin: 0px 0;
+    margin: 6px 0;
     box-sizing: border-box;
-    border: none;
-    color: white;
+    font-size: 15px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease, transform 0.15s ease;
 }
 
-/*Sign In Button*/
+.btn:hover,
+.btn:focus-visible,
+.btn.btn-active {
+    background: #0c0c0c;
+    color: #ffffff;
+}
+
+.btn:active {
+    transform: translateY(1px);
+}
+
+.btn-outline {
+    background: transparent;
+}
+
+/* Legacy hooks */
+.SubButton,
 .SignButton {
-    width: 100%;
-    background-color: rgb(95, 136, 224);
-    border-radius: 8px;
-    gap: 70px 8px;
-    padding: 12px;
-    margin: 4px 0;
-    box-sizing: border-box;
-    border: none;
-    color: white;
+    border: 1px solid var(--border-color);
+    background: #ffffff;
+    color: #0c0c0c;
+    border-radius: var(--border-radius);
 }
+
+/* Layout tweaks */
+.Lwindow br,
+.Swindow br {
+    line-height: 0;
+}
+
+.Lwindow,
+.Swindow,
+.form-card {
+    text-align: left;
+}
+

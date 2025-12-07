@@ -8,12 +8,12 @@
     <title>Login</title>
 </head>
 
-<body>
+<body class="auth-body">
     <link rel="stylesheet" href="StyleLogin.css">
 
 
     <!--Login Fenster-->
-    <div class="Lwindow" id="LoginWindow">
+    <div class="Lwindow form-card" id="LoginWindow">
         <label>Username:</label>
         <br>
         <input class="Inputfield" type="text" id="username">
@@ -23,9 +23,9 @@
         <br>
         <input class="Inputfield" type="text" id="password">
         <br>
-        <input class="SubButton" id="LoginButton" type="submit" value="Login" onclick="login()">
+        <input class="SubButton btn" id="LoginButton" type="submit" value="Login" onclick="login()">
         <br>
-        <input class="SignButton" id="SuWindowButton" type="button" value="Signup" >
+        <input class="SignButton btn btn-outline" id="SuWindowButton" type="button" value="Signup" >
     
     <center>
         <p class="Error" id="WrongPW">Username or Password is wrong!</p>
@@ -34,7 +34,7 @@
 
 
     <!--SingUp Fenster-->
-    <div class="Swindow" id="SignupWindow">
+    <div class="Swindow form-card" id="SignupWindow">
         <label>Username:*</label>
         <br>
         <input class="Inputfield" type="text" id="SUusername">
@@ -85,9 +85,9 @@
         <input class="Inputfield" type="text" id="SUconfirmpw">
         <br>
         <br>
-        <input class="SubButton" id="SubmitButton" type="submit" value="Submit">
+        <input class="SubButton btn" id="SubmitButton" type="submit" value="Submit">
         <br>
-        <input class="SignButton" id="SignCancel" type="button" value="Cancel">
+        <input class="SignButton btn btn-outline" id="SignCancel" type="button" value="Cancel">
         <center>
             <p class="Error" id="NotAllData">Not all required fields are filled!</p>
         </center>

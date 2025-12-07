@@ -1,70 +1,103 @@
+:root {
+    --border-color: #0c0c0c;
+    --radius: 10px;
+    --shadow-soft: 0 10px 25px rgba(0, 0, 0, 0.08);
+    --text-color: #0c0c0c;
+    --bg: #ffffff;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f4f4f4;
+    color: var(--text-color);
+}
+
+/* ===============================
+   BUTTON SYSTEM
+================================= */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 0.65rem 1.2rem;
+    background: var(--bg);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    font-size: 15px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease, transform 0.15s ease;
+    text-decoration: none;
+}
+
+.btn:hover,
+.btn:focus-visible,
+.btn-active {
+    background: #0c0c0c;
+    color: #ffffff;
+}
+
+.btn:active {
+    transform: translateY(1px);
+}
+
+.btn-outline {
+    background: transparent;
+}
+
 /* ===============================
    MAIN GRID
 ================================= */
 .main-grid {
     display: grid;
     grid-template-columns: 65% 35%;
-    grid-template-rows: auto 1fr; /* Header + gleichmäßig wachsender Inhalt */
-    gap: clamp(0.5em, 2vw, 1em);
-    width: 98%;
+    grid-template-rows: auto 1fr;
+    gap: clamp(0.75em, 2vw, 1.25em);
+    width: min(1200px, 98vw);
     margin: 0 auto;
-    padding: clamp(8px, 2vw, 16px);
-
-    /* ⭐ Das löst ALLE Probleme */
-    height: auto;
+    padding: clamp(12px, 2vw, 20px);
     min-height: 100vh;
-    box-sizing: border-box;
 }
-
 
 /* ===============================
    HEADER
 ================================= */
 .header {
     grid-column: 1 / -1;
-    border: 2px solid black;
-    border-radius: 10px;
-    padding: clamp(12px, 1.5vw, 20px);
-    background-color: white;
-
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    padding: clamp(14px, 1.5vw, 22px);
+    background-color: var(--bg);
     display: flex;
     justify-content: space-between;
     align-items: center;
     flex-wrap: wrap;
-
-    font-size: clamp(20px, 2.5vw, 32px);
+    gap: 0.75rem;
+    font-size: clamp(20px, 2.5vw, 28px);
     font-weight: bold;
-    font-family: Arial, sans-serif;
 }
 
 .logo {
-    color: green;
+    letter-spacing: 1px;
+    color: var(--text-color);
 }
 
-/* ===============================
-   HEADER BUTTONS
-================================= */
 .header-buttons {
     display: flex;
     flex-wrap: wrap;
     justify-content: flex-end;
-    gap: clamp(0.5em, 1.5vw, 1em);
+    gap: clamp(0.5em, 1.5vw, 0.9em);
 }
 
-.header-buttons button {
-    padding: clamp(8px, 1vw, 12px) clamp(12px, 2vw, 20px);
-    border: 2px solid black;
-    border-radius: 8px;
-    background-color: white;
-    cursor: pointer;
-    font-size: clamp(14px, 2vw, 16px);
-    transition: 0.2s;
-}
-
-.header-buttons button:hover {
-    background-color: black;
-    color: white;
-    transform: translateY(-2px);
+.header-buttons .btn {
+    padding: 0.5rem 1.05rem;
+    font-size: 15px;
 }
 
 /* ===============================
@@ -72,31 +105,107 @@
 ================================= */
 .map,
 .content {
-    border: 2px solid black;
-    border-radius: 10px;
-    padding: 0;   /* ⭐ padding entfernt – Map wird endlich perfekt fullscreen */
-    background-color: white;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    font-size: clamp(18px, 3vw, 28px);
-    font-weight: bold;
-    font-family: Arial, sans-serif;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    background-color: var(--bg);
+    box-shadow: var(--shadow-soft);
 }
 
 .map {
-    min-height: 450px; /* Sieht besser aus */
+    min-height: 450px;
     height: 100%;
+    overflow: hidden;
 }
 
 .map #mapbox {
     width: 100%;
     height: 100%;
-    border-radius: 10px;
+    border-radius: var(--radius);
     overflow: hidden;
 }
+
+.content {
+    display: flex;
+    flex-direction: column;
+    padding: clamp(16px, 2vw, 24px);
+    align-items: stretch;
+    justify-content: flex-start;
+    min-height: 450px;
+}
+
+.content-area {
+    gap: 1rem;
+}
+
+.ride-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    align-items: center;
+}
+
+.ride-controls .btn {
+    min-width: 140px;
+}
+
+.content-box {
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+    font-size: 15px;
+    line-height: 1.6;
+    text-align: left;
+}
+
+.content-box h3,
+.content-box h4 {
+    margin: 0 0 12px;
+    font-weight: 700;
+}
+
+.content-box h3 + h4,
+.content-box h4 + h4 {
+    margin-top: 8px;
+}
+
+.content-box p,
+.content-box div,
+.content-box ul,
+.content-box ol {
+    margin: 0 0 12px;
+}
+
+.content-box ul,
+.content-box ol {
+    padding-left: 1.1em;
+}
+
+.content-box li {
+    margin-bottom: 8px;
+}
+
+/* ===============================
+   STATION CARDS
+================================= */
+.content-box .station-card {
+    border: 1px solid var(--border-color) !important;
+    border-radius: var(--radius) !important;
+    padding: 14px 16px !important;
+    background: #ffffff !important;
+    margin-bottom: 12px !important;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.content-box .station-card h4 {
+    margin: 0 0 8px 0 !important;
+}
+
+.station-card:hover {
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+}
+
 .station-marker {
     transition: transform .15s ease;
 }
@@ -105,7 +214,6 @@
     transform: scale(1.25);
 }
 
-
 /* ===============================
    MOBILE OPTIMIZATION
 ================================= */
@@ -113,8 +221,6 @@
     .main-grid {
         grid-template-columns: 1fr;
         grid-template-rows: auto auto auto;
-        height: auto;
-        min-height: auto;
     }
 
     .map {
@@ -124,18 +230,22 @@
     .header {
         justify-content: center;
         text-align: center;
-        gap: 0.8em;
     }
 
     .header-buttons {
         justify-content: center;
     }
+
+    .ride-controls {
+        justify-content: center;
+    }
 }
 
 @media (max-width: 600px) {
-    .header-buttons button {
-        font-size: 14px;
-        padding: 8px 14px;
+    .header-buttons .btn,
+    .ride-controls .btn {
+        width: 100%;
+        justify-content: center;
     }
 
     .map {
