@@ -923,9 +923,9 @@ if (typeof document !== 'undefined') {
                 return;
             }
             const currentSub = subs.find(s => s.subscription_id === currentPersona.subscription_id);
-            let html = `<h3>Settings</h3><div>Current subscription: ${currentSub ? currentSub.subscription_name : ''}</div>`;
+            let html = `<h3>Store</h3><div>Current subscription: ${currentSub ? currentSub.subscription_name : ''}</div>`;
             html += '<h4>Available subscriptions</h4>';
-            html += '<ul>' + subs.filter(s => s.subscription_id !== 1).map(s => `<li>${s.subscription_name} - Subscription description</li>`).join('') + '</ul>';
+            html += '<ul>' + subs.filter(s => s.subscription_id !== 1).map(s => `<li>${s.subscription_name}</li>`).join('') + '</ul>';
             html += '<button id="change-sub">Change subscription</button>';
             showMessage(html);
             document.getElementById('change-sub').addEventListener('click', () => renderSubscriptionForm(subs));
